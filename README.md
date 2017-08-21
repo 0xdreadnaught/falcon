@@ -27,6 +27,9 @@ Currently supports detection of the following CDN platforms:
 - MaxCDN
 - Netlify
 
+CMS DETECTION:
+Currently supports basic WordPress detection based off known URL paths.
+
 Currently Working On:
-CMS Detection
+CMS Detection: Source scrubbing for WordPress, add more CMS platform support.
 
