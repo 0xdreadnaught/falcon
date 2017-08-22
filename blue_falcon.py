@@ -1,18 +1,62 @@
 #!/usr/local/bin/python
 # coding: latin-1
-
-
+#
+#
 #Blue Falcon Brian Peters AKA Dreadnaught
 #Inspired by RED_HAWK by Tuhinshubhra AKA R3D#@X0R_2HIN
-#The latin-1 allows for the banner chars to work properly
+#
+# @url: https://www.dreadnaught.info
+# @url: https://github.com/dreadnaughtsec/falcon
+#
+# Copyright (c) 2017, Dreadnaught Security
+# All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+#
+# 1. Redistributions of source code must retain the above copyright notice,
+# this list of conditions and the following disclaimer.
+#
+# 2. Redistributions in binary form must reproduce the above copyright
+# notice, this list of conditions and the following disclaimer in the
+# documentation and/or other materials provided with the distribution.
+#
+# 3. Neither the name of the copyright holder nor the names of its
+# contributors may be used to endorse or promote products derived from this
+# software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
+# IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+# THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+# PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+# CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+# EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+# PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
+# OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+# LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+# NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+# SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import subprocess
 from platform import system
 import os
 import urlparse
 import sys
-#import urllib2
+
 #from bs4 import BeautifulSoup
+
+# ##############################
+#        BANNER GRAB SECTION
+# ##############################
+
+def grabBanner():
+	global target
+	p = subprocess.Popen(["curl -I " + target], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+	out, err = p.communicate()
+	
+	print(out)
+	
+	quitCheck()
 
 # ##############################
 #        CMS DETECTION SECTION
@@ -125,7 +169,7 @@ def mainMenu():
 	valid = False
 	while not valid:
 		print("Target URL: " + target)
-		print(yellow + "[" + green + "1" + yellow + "] Detect CDN\n[" + green + "2" + yellow + "] Detect CMS (Not Implemented)\n[" + green + "3" + yellow + "] Grab Banner (Not Implemented)\n[" + green + "R" + yellow + "] Reset Target URL\n[" + red + "Q" + yellow + "] Quit\n")
+		print(yellow + "[" + green + "1" + yellow + "] Detect CDN\n[" + green + "2" + yellow + "] Detect CMS\n[" + green + "3" + yellow + "] Grab Banner\n[" + green + "R" + yellow + "] Reset Target URL\n[" + red + "Q" + yellow + "] Quit\n")
 		select = raw_input("Please Make A Selection:")
 		if(select == "1"):
 			detectCDN()
@@ -134,7 +178,8 @@ def mainMenu():
 			detectCMS()
 			banner()
 		if(select == "3"):
-			pass
+			grabBanner()
+			banner()
 		if(select.upper() == "R"):
 			setTarget()
 		if(select.upper() == "Q"):
@@ -144,7 +189,7 @@ def quitCheck():
 	global clear
 	valid = False
 	while not valid:
-		answer = raw_input("\n[M]ain Menu, [R]eset Target, [Q]uit?:")
+		answer = raw_input("\n[" + green + "M" + yellow + "]ain Menu, [" + green + "R" + yellow + "]eset Target, [" + red + "Q" + yellow + "]uit?:")
 		if(answer.upper() == "M"):
 			clearScreen()
 			mainMenu()
