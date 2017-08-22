@@ -6,12 +6,13 @@
 #Inspired by RED_HAWK by Tuhinshubhra AKA R3D#@X0R_2HIN
 #The latin-1 allows for the banner chars to work properly
 
-import subprocess #for running system commands
-from platform import system #check os type for clearing
+import subprocess
+from platform import system
 import os
 import urlparse
 import sys
-from urllib2 import Request, urlopen, HTTPError, URLError
+#import urllib2
+#from bs4 import BeautifulSoup
 
 # ##############################
 #        CMS DETECTION SECTION
@@ -25,23 +26,15 @@ def detectCMS():
 	#list with just signautes
 	cmsKeys = cmsDict.keys()
 	
-	#construct agent and headers
-	user_agent = 'Mozilla/20.0.1 (compatible; MSIE 5.5; Windows NT)'
-	headers = { 'User-Agent':user_agent }
-	
 	for item in cmsKeys:
-		#form request
-		request = Request(target + item, headers = headers)
-	
-		#make request
-		try:
-			page_open = urlopen(request)
-		except HTTPError, e:
-			pass
-		except URLError, e:
-			pass
-		else:
-			print("Detected: " + green + cmsDict[item] + yellow + " @ " + target + item )
+		#if response is 200, then we can assume the path is valid and not a redirect
+		p = subprocess.Popen(["curl -I " + target + item], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+		out, err = p.communicate()
+		
+		if("200 OK" in out):
+			print("Detected " + green + cmsDict[item] + yellow + " @ " + target + item )
+		elif("302 Found" in out):
+			print("Detected " + green + cmsDict[item] + yellow + " @ " + target + item )
 	
 	quitCheck()
 
