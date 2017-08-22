@@ -5,7 +5,8 @@ Supported Platforms: Linux / Windows (Bash enabled)
 
 Features:
 - CDN detection 
-- CMS detection (incomplete)
+- CMS detection
+- Banner grabbing
 - Whois lookup (incomplete)
 - Web crawling (incomplete)
 - more to come
@@ -28,8 +29,20 @@ Currently supports detection of the following CDN platforms:
 - Netlify
 
 CMS DETECTION:
-Currently supports basic WordPress detection based off known URL paths.
+Currently supports detection of CMS platforms via path validation and HTML based signatures:
+- WordPress
+- Joomla!
+- Drupal
+- SquareSpace
+- Weebly
+- Typo3 CMS
+- Jimdo
+- DNN
+- SharePoint
+
+BANNER GRABBING:
+Utilizes Curl -I <URL> to grab target banner information
 
 Currently Working On:
-CMS Detection: Source scrubbing for WordPress, add more CMS platform support.
+CMS Detection: Need  to implement a more indepth method for validating /mis/drupal.js as well as scrubbing invalid url for sharepoint errors
 
