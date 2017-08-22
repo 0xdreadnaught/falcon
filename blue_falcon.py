@@ -42,8 +42,8 @@ from platform import system
 import os
 import urlparse
 import sys
-
-#from bs4 import BeautifulSoup
+import urllib2
+from bs4 import BeautifulSoup
 
 # ##############################
 #        BANNER GRAB SECTION
@@ -69,6 +69,22 @@ def detectCMS():
 	cmsDict = {"/wp-content/": "WordPress", "/wp-login.php": "WordPress", "/wp-admin/": "WordPress", "/wp-uploads/": "WordPress", "/templates/": "Joomla!", "/misc/drupal.js": "Drupal"}
 	#list with just signautes
 	cmsKeys = cmsDict.keys()
+	#list of html based signatures
+	htmlDict = {'<meta name="generator" content="WordPress"': 'WordPress', '<meta content="WordPress': 'Wordpress', 'id="wp-admin-bar-': 'WordPress', '/wp-content/themes/': 'WordPress', "JFactory::getDocument()->setGenerator('');": 'Joomla!', 
+'<meta name="generator" content="Joomla': 'Joomla!', '<meta name="generator" content="Drupal': 'Drupal', 'Static.SQUARESPACE_CONTEXT': 'SquareSpace', 'SQUARESPACE_ROLLUPS,': 'SquareSpace', 
+'Adirondack5093f261e4b0979eac7cb299': 'SquareSpace', 'Adversary515c7bd0e4b054dae3fcf003': 'SquareSpace', 'Alex515c7bd0e4b054dae3fcf003': 'SquareSpace', 'Anya52a74dafe4b073a80cd253c5': 'SquareSpace', 
+'Aubrey507c1fdf84ae362b5e7be44e': 'SquareSpace', 'Avenue4fd11f32c4aad9b01c9e624c': 'SquareSpace', 'Aviator507c1fdf84ae362b5e7be44e': 'SquareSpace', 'Bedford52a74dafe4b073a80cd253c5': 'SquareSpace', 
+'Boutique4fdf4f21c4aad4a72790bd9b': 'SquareSpace', 'Bryant52a74dafe4b073a80cd253c5': 'SquareSpace', 'Dovetail4fef25bbe4b0ea9df05ac51e': 'SquareSpace', 'Encore507c1fdf84ae362b5e7be44e': 'SquareSpace', 
+'Five503ba86de4b04953d0f49846': 'SquareSpace', 'Flatiron4fba57fde4b0f79d428daa8b': 'SquareSpace', 'Forte51e6b9e4e4b062dafa7099b9': 'SquareSpace', 'Frontrow4fb6ba24e4b000ba644d8298': 'SquareSpace', 
+'Fulton52e96934e4b0ea14d0f64568': 'SquareSpace', 'Galapagos5230da18e4b0a637f7e627c5': 'SquareSpace', 'Hayden52a74dafe4b073a80cd253c5': 'SquareSpace', 'Horizon52e96934e4b0ea14d0f64568': 'SquareSpace', 
+'Ishimoto4fb7a14224ac99c5fee12515': 'SquareSpace', 'Marquee515c7bd0e4b054dae3fcf003': 'SquareSpace', 'Momentum50130f5be4b00a22f5c5a82a': 'SquareSpace', 'Montauk50521cf884aeb45fa5cfdb80': 'SquareSpace', 
+'Native4f6a1392e4b07090d46e7ec9': 'SquareSpace', 'Om50521cf884aeb45fa5cfdb80': 'SquareSpace', 'Pacific52e96934e4b0ea14d0f64568': 'SquareSpace', 'Peak500589fc84aed5ec11c2b672': 'SquareSpace', 
+'Shift515c7bd0e4b054dae3fcf003': 'SquareSpace', 'Supply5253022fe4b0d0363260861e': 'SquareSpace', 'Wells4f9adc1524ac5df956fdf98f': 'SquareSpace', 'Wexley4fbff70b84aeca67fb3a3c56': 'SquareSpace', 
+'configDomain = "www.weebly.com"': 'Weebly', '.checkout.weebly.com': 'Weebly', 'weebly_new_window"': 'Weebly', 'a title="weebly': 'Weebly', 'alt="weebly': 'Weebly', 'Code for Weebly -->': 'Weebly', 
+'<meta name="generator" content="TYPO3 CMS': 'Typo3 CMS', '/typo3conf/': 'Typo3 CMS', '/typo3temp/': 'Typo3 CMS', 'website is powered by TYPO3': 'Typo3 CMS', 'jimdo_layout_css': 'Jimdo', 'jimdoData': 'Jimdo', 
+'jimdoCom': 'Jimdo', 'JimdoHelpCenter': 'Jimdo', 'jimdo.com/app/cms': 'Jimdo', 'jimdo.com/app/auth': 'Jimdo', 'content="Microsoft SharePoint': 'SharePoint', '="dnn_sdLanguage': 'DNN', 'name="dnn$': 'DNN', 
+'id="dnn_ControlPanel': 'DNN', 'id="dnn_mobLogin': 'DNN', '="dnn_dnn': 'DNN', '="dnn_Search': 'DNN', '="dnn$Search': 'DNN', '"/js/dnn.js': 'DNN', '/dnncore': 'DNN', 'dnn.controls': 'dnn', 'dnn_dnnBREADCRUMB': 'DNN'}
+	htmlKeys = htmlDict.keys()
 	
 	for item in cmsKeys:
 		#if response is 200, then we can assume the path is valid and not a redirect
@@ -79,6 +95,16 @@ def detectCMS():
 			print("Detected " + green + cmsDict[item] + yellow + " @ " + target + item )
 		elif("302 Found" in out):
 			print("Detected " + green + cmsDict[item] + yellow + " @ " + target + item )
+			
+	#now to pull a copy of the page with bs4 and scrape the page for html signatures for further CMS detection
+	source = urllib2.urlopen(target).read()
+	soup = BeautifulSoup(source, "html5lib")
+	soupString = soup.prettify().encode('utf-8')
+
+	#iterate through all html signatures for further detection
+	for item in htmlKeys:
+		if item in soupString:
+			print("Detected " + green + htmlDict[item] + yellow + " @ " + target + " in source with signature: " + magenta + item + yellow)
 	
 	quitCheck()
 
