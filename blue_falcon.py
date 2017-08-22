@@ -2,35 +2,9 @@
 # coding: latin-1
 
 
-#Blue Falcon
-#Inspired by RED_HAWK
-
-#known cloudflare site: www.peoplefinders.com
-#known incapsula site: www.guru.com
-#known keycdn site: www.nperf.com
-#known akamai site: www.twitch.tv
-#known cloudfront site: www.amazon.com
-#known cachefly site: www.tenable.cachefly.net
-#known edgecast site: www.lynda.com
-#known bitgravity site: www.tutorialspoint.com
-#known fastly site: www.giphy.com
-#known fireblade site: www.zaneray.com
-#known maxcdn site: www.boredpanda.com
-#known netlify site: www.framer.com
-
-#cloudlfare signature: .cdn.cloudflare.net XXX
-#incapsula signature: .x.incapdns.net.
-#keycdn signature: p-usmi.kxcdn.com
-#akamai signature: .akamaiedge.net .globalredir.akadns.net .akamai.net .edgesuite.net
-#cloudfront signature: .cloudfront.net .elb.amazonaws.com
-#cachefly signature: g5.cachefly.net
-#edgecast signature: .adn.alphacdn .wac.edgecastcdn.net .adn.omicroncdn.net .adn.phicdn.net 
-#bitgravity signature: .cdn.bitgravity.com
-#fastly signature: .global.fastly.net .map.fastly.net
-#fireblade signature: .stackpathdns.com.
-#maxcdn signature: .netdna-cdn.com
-#netlify signature: .netflify.com
-
+#Blue Falcon Brian Peters AKA Dreadnaught
+#Inspired by RED_HAWK by Tuhinshubhra AKA R3D#@X0R_2HIN
+#The latin-1 allows for the banner chars to work properly
 
 import subprocess #for running system commands
 from platform import system #check os type for clearing
@@ -39,11 +13,15 @@ import urlparse
 import sys
 from urllib2 import Request, urlopen, HTTPError, URLError
 
+# ##############################
+#        CMS DETECTION SECTION
+# ##############################
+
 def detectCMS():
-	print("CMS HIT 2")
+	print("\n") #just a little house keeping
 	global target
 	#Dictionary of CMS signatures
-	cmsDict = {"/wp-content/": "WordPress", "/wp-login.php": "WordPress", "/wp-admin/": "WordPress", "/wp-uploads/": "WordPress"}
+	cmsDict = {"/wp-content/": "WordPress", "/wp-login.php": "WordPress", "/wp-admin/": "WordPress", "/wp-uploads/": "WordPress", "/templates/": "Joomla!", "/misc/drupal.js": "Drupal"}
 	#list with just signautes
 	cmsKeys = cmsDict.keys()
 	
